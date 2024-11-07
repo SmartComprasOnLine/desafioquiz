@@ -1,0 +1,264 @@
+<html><head><base href="." />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transforme sua Vida em 19 Dias</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+    }
+    
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .quiz-box {
+        background: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        margin-top: 50px;
+    }
+    
+    .progress-bar {
+        width: 100%;
+        height: 10px;
+        background: #eee;
+        border-radius: 5px;
+        margin: 20px 0;
+        overflow: hidden;
+    }
+    
+    .progress {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, #4CAF50, #8BC34A);
+        transition: width 0.5s ease;
+    }
+    
+    .btn {
+        background: #4CAF50;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+        transition: transform 0.2s;
+    }
+    
+    .btn:hover {
+        transform: scale(1.05);
+    }
+    
+    .hidden {
+        display: none;
+    }
+    
+    .result-card {
+        text-align: center;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 10px;
+        margin-top: 20px;
+    }
+    
+    .countdown {
+        font-size: 24px;
+        color: #4CAF50;
+        font-weight: bold;
+        margin: 20px 0;
+    }
+
+    .imc-input {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    
+    .health-image {
+        width: 200px;
+        height: 200px;
+        margin: 20px auto;
+        display: block;
+    }
+
+    .imc-result {
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 8px;
+        text-align: center;
+        background: #e8f5e9;
+    }
+
+    .weight-graph {
+        width: 100%;
+        height: 200px;
+        margin: 20px 0;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="quiz-box">
+            <div id="step1">
+                <h2>Descubra seu Potencial de Transformação</h2>
+                <p>Responda algumas perguntas rápidas para receber seu plano personalizado.</p>
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <h3>Qual é seu principal objetivo?</h3>
+                <button class="btn" onclick="nextStep(1)">Perder Peso</button><br>
+                <button class="btn" onclick="nextStep(1)">Ganhar Massa Magra</button><br>
+                <button class="btn" onclick="nextStep(1)">Melhorar a Saúde</button>
+            </div>
+
+            <div id="step2" class="hidden">
+                <h3>Vamos calcular seu IMC?</h3>
+                <input type="number" class="imc-input" id="weight" placeholder="Seu peso (kg)" step="0.1">
+                <input type="number" class="imc-input" id="height" placeholder="Sua altura (m)" step="0.01">
+                <button class="btn" onclick="calculateIMC()">Calcular e Continuar</button>
+            </div>
+
+            <div id="step3" class="hidden">
+                <h3>Quantas vezes por semana você se exercita?</h3>
+                <button class="btn" onclick="nextStep(3)">Não me exercito</button><br>
+                <button class="btn" onclick="nextStep(3)">1-2 vezes</button><br>
+                <button class="btn" onclick="nextStep(3)">3+ vezes</button>
+            </div>
+
+            <div id="step4" class="hidden">
+                <h3>Como está sua alimentação atual?</h3>
+                <button class="btn" onclick="nextStep(4)">Preciso melhorar muito</button><br>
+                <button class="btn" onclick="nextStep(4)">Regular</button><br>
+                <button class="btn" onclick="nextStep(4)">Boa, mas quero aperfeiçoar</button>
+            </div>
+
+            <div id="step5" class="hidden">
+                <h3>Qual seu nível de estresse diário?</h3>
+                <button class="btn" onclick="nextStep(5)">Alto</button><br>
+                <button class="btn" onclick="nextStep(5)">Médio</button><br>
+                <button class="btn" onclick="nextStep(5)">Baixo</button>
+            </div>
+
+            <div id="step6" class="hidden">
+                <h3>Quantas horas você dorme por noite?</h3>
+                <button class="btn" onclick="nextStep(6)">Menos de 6 horas</button><br>
+                <button class="btn" onclick="nextStep(6)">6-8 horas</button><br>
+                <button class="btn" onclick="nextStep(6)">Mais de 8 horas</button>
+            </div>
+
+            <div id="result" class="hidden">
+                <div class="result-card">
+                    <h2>Parabéns! 🎉</h2>
+                    <div id="imc-result" class="imc-result"></div>
+                    <svg class="weight-graph" id="weightGraph" viewBox="0 0 300 200">
+                        <path d="M50,150 C100,150 150,50 250,50" stroke="#4CAF50" fill="none" stroke-width="3"/>
+                        <text x="50" y="180" fill="#666">Hoje</text>
+                        <text x="250" y="180" fill="#666">19 dias</text>
+                    </svg>
+                    <p>Com base nas suas respostas, você tem um potencial incrível para transformar sua vida em apenas 19 dias!</p>
+                    <div class="countdown pulse">
+                        <span id="timer">05:00</span>
+                    </div>
+                    <p>Oferta especial válida apenas por mais:</p>
+                    <h3>Desafio 19 Dias - Por apenas R$97</h3>
+                    <p>✓ Plano alimentar personalizado<br>
+                       ✓ Receitas práticas e saudáveis<br>
+                       ✓ Suporte via grupo exclusivo<br>
+                       ✓ Acompanhamento diário<br>
+                       ✓ Análise completa do seu IMC<br>
+                       ✓ Plano de exercícios adaptado</p>
+                    <button class="btn pulse" onclick="window.location.href='https://pay.example.com/19dias'">
+                        QUERO COMEÇAR AGORA!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+let currentStep = 1;
+let progressBar = document.getElementById('progress');
+let userIMC = 0;
+
+function nextStep(step) {
+    document.getElementById(`step${step}`).classList.add('hidden');
+    
+    if (step < 6) {
+        document.getElementById(`step${step + 1}`).classList.remove('hidden');
+        progressBar.style.width = `${(step + 1) * 16.66}%`;
+    } else {
+        document.getElementById('result').classList.remove('hidden');
+        progressBar.style.width = '100%';
+        startCountdown();
+    }
+}
+
+function calculateIMC() {
+    const weight = parseFloat(document.getElementById('weight').value);
+    const height = parseFloat(document.getElementById('height').value);
+    
+    if (weight && height) {
+        userIMC = weight / (height * height);
+        const imcResult = document.getElementById('imc-result');
+        let message = `Seu IMC é ${userIMC.toFixed(1)} - `;
+        
+        if (userIMC < 18.5) message += 'Abaixo do peso ideal';
+        else if (userIMC < 25) message += 'Peso normal';
+        else if (userIMC < 30) message += 'Sobrepeso';
+        else message += 'Obesidade';
+        
+        imcResult.innerHTML = message;
+        nextStep(2);
+    } else {
+        alert('Por favor, preencha peso e altura corretamente');
+    }
+}
+
+function startCountdown() {
+    let time = 5 * 60;
+    const timerElement = document.getElementById('timer');
+    
+    const countdown = setInterval(() => {
+        const minutes = Math.floor(time / 60);
+        let seconds = time % 60;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+        
+        timerElement.textContent = `${minutes}:${seconds}`;
+        
+        if (time === 0) {
+            clearInterval(countdown);
+        }
+        time--;
+    }, 1000);
+}
+
+document.addEventListener('mouseleave', function(event) {
+    if (event.clientY < 0 && !localStorage.getItem('popupShown')) {
+        alert('ESPERE! Não perca esta oportunidade única!\nAproveite 20% OFF usando o código "HOJE19"');
+        localStorage.setItem('popupShown', true);
+    }
+});
+</script>
+
+</body></html>
